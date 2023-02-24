@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+        <item
+            android:id="@+id/nav_menu_down_button_home"
+            android:title=""
+            android:icon="@mipmap/ic_launcher_foreground" />
+        <item
+            android:id="@+id/nav_menu_down_button_loupe"
+            android:title=""
+            android:icon="@mipmap/ic_loupe_foreground"/>
+        <item
+            android:id="@+id/nav_menu_down_button_personne"
+            android:title=""
+            android:icon="@mipmap/ic_personne_foreground"/>
+        <item
+            android:id="@+id/nav_menu_down_button_mail"
+            android:title=""
+            android:icon="@mipmap/enveloppe"/>
+</menu>
