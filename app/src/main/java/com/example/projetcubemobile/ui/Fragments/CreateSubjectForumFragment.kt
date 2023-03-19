@@ -1,5 +1,6 @@
 package com.example.projetcubemobile.ui.Fragments
 
+import ConnectionDataBase
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -48,6 +49,14 @@ class CreateSubjectForumFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+
+        var sql = ConnectionDataBase();
+
+        sql.getConnection();
+
+        sql.testRequete();
+
+
         return inflater.inflate(R.layout.fragment_create_subject_forum, container, false)
     }
 
