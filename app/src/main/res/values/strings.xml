@@ -26,4 +26,14 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+    <!-- Basic Information -->
+    <string name="mail_address">Adresse mail</string>
+    <string name="password">Mot de passe</string>
+    <string name="forgot_password">Mot de passe oublié</string>
+    <string name="log_in">Se connecter</string>
+    <string name="first_name">Prénom</string>
+    <string name="Name">Nom</string>
+    <string name="Create_account">Créer un compte</string>
+
 </resources>
