@@ -2,11 +2,11 @@ package com.example.projetcubemobile.models
 
 class SubjectForumModel {
 
-    private var id: Int = 0;
-    private var idCategorie: Int = 0;
+    var id: Int = 0;
+    var idCategorie: Int = 0;
 
 
-    private lateinit var title: String;
-    private lateinit var text: String;
+     lateinit var title: String;
+  lateinit var text: String;
 
 }

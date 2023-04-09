@@ -1,4 +1,4 @@
-package com.example.projetcubemobile.ui.Fragments
+package com.example.projetcubemobile.RecyclerViewAdapter
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,15 +9,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.projetcubemobile.R
-import com.example.projetcubemobile.RecyclerViewAdapter.MyForumCategorieListRecyclerViewAdapter
-import com.example.projetcubemobile.models.CategorieModel
-import com.example.projetcubemobile.ui.Fragments.placeholder.PlaceholderContent
-import java.util.LinkedList
+import com.example.projetcubemobile.RecyclerViewAdapter.placeholder.PlaceholderContent
 
 /**
  * A fragment representing a list of Items.
  */
-class ForumCategorieListFragment : Fragment() {
+class CategorieFragment : Fragment() {
 
     private var columnCount = 1
 
@@ -32,28 +29,8 @@ class ForumCategorieListFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View?
-
-    {
-        val view = inflater.inflate(R.layout.fragment_item_list, container, false)
-
-        //Essaie de données de test :
-        var donne1 = CategorieModel();
-
-        donne1.id = 1;
-        donne1.nom = "test 1"
-
-        var donne2 = CategorieModel();
-
-        donne2.id = 2;
-        donne2.nom = "test 2"
-
-        val listTest = LinkedList<CategorieModel>();
-
-        listTest.add(donne1)
-        listTest.add(donne2)
-
-
+    ): View? {
+        val view = inflater.inflate(R.layout.categorie_scrool_item_list2, container, false)
 
         // Set the adapter
         if (view is RecyclerView) {
@@ -62,7 +39,6 @@ class ForumCategorieListFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = MyForumCategorieListRecyclerViewAdapter(listTest)
             }
         }
         return view
@@ -76,7 +52,7 @@ class ForumCategorieListFragment : Fragment() {
         // TODO: Customize parameter initialization
         @JvmStatic
         fun newInstance(columnCount: Int) =
-            ForumCategorieListFragment().apply {
+            CategorieFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_COLUMN_COUNT, columnCount)
                 }
