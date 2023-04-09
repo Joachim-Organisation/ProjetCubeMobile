@@ -1,14 +1,33 @@
 package com.example.projetcubemobile.ui.Fragments
 
+import SubjectForumApi
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ListView
+import android.widget.Spinner
 import androidx.activity.addCallback
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.projetcubemobile.R
+import com.example.projetcubemobile.RecyclerViewAdapter.MyCategorieRecyclerViewAdapter
+import com.example.projetcubemobile.RecyclerViewAdapter.MyForumCategorieListRecyclerViewAdapter
+import com.example.projetcubemobile.RecyclerViewAdapter.MyItemRecyclerViewAdapter
+import com.example.projetcubemobile.RecyclerViewAdapter.placeholder.PlaceholderContent
 import com.example.projetcubemobile.Singleton
+import com.example.projetcubemobile.models.CategorieModel
+import com.example.projetcubemobile.models.SubjectForumModel
 import com.example.projetcubemobile.tools.FragmentsTools
+import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import org.w3c.dom.Text
+import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,6 +43,17 @@ class CreateSubjectForumFragment : Fragment() {
     // TODO: Rename and change types of parameters
 
     private lateinit var fragmentTools: FragmentsTools
+
+    private lateinit var textInputTitle: TextInputEditText
+
+    private lateinit var textInputText: TextInputEditText
+
+    private lateinit var buttonSubmit: Button
+
+    private lateinit var spinnerCategories: Spinner
+
+    private var columnCount = 1
+
     override fun onPause(){
         super.onPause()
         Singleton.fragment = this
@@ -49,6 +79,25 @@ class CreateSubjectForumFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_create_subject_forum, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        this.textInputTitle = view.findViewById(R.id.input_fragment_create_subject_forum_title)
+        this.textInputText = view.findViewById(R.id.input_fragment_create_subject_forum_text)
+        this.buttonSubmit = view.findViewById(R.id.button_fragment_create_subject_forum_valider)
+        this.spinnerCategories = view.findViewById(R.id.fragment_create_subjet_forum_spinner)
+
+        this.buttonSubmit.setOnClickListener {
+            var SubjectForumModel = SubjectForumModel();
+
+        }
+
+        val api = SubjectForumApi()
+        api.getAllCategories { listCategories ->
+            activity?.runOnUiThread {
+                this.spinnerCategories.adapter = MyCategorieRecyclerViewAdapter(listCategories)
+            }
+        }
     }
 
     companion object {

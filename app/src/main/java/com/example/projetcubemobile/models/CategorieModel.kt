@@ -6,7 +6,7 @@ class CategorieModel {
 
     var id: Int = 0;
 
-    lateinit var title: String;
+    lateinit var nom: String;
 
     lateinit var subjectForumModels: LinkedList<SubjectForumModel>
 }

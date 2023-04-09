@@ -33,7 +33,7 @@ class MyForumCategorieListRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = values[position]
 
-        holder.contentView.text = item.title
+        holder.contentView.text = item.nom
     }
 
     override fun getItemCount(): Int = values.size
