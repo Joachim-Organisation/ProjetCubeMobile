@@ -30,6 +30,12 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/fragment_main_page_forum_acceder_a_mes_sujets"
+                android:layout_width="211dp"
+                android:layout_height="wrap_content"
+                android:text="Acceder à mes sujets" />
+
+            <Button
                 android:id="@+id/button_main_page_forum_creer_sujet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

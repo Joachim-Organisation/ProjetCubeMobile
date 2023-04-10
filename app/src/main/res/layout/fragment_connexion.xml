@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/fragment_home_main_layout">
 
     <TextView
         android:id="@+id/input_fragment_connexion_mail_address_text"
@@ -27,6 +28,7 @@
         app:layout_constraintTop_toBottomOf="@+id/input_fragment_connexion_mail_address_text">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/fragment_connexion_mail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -53,6 +55,7 @@
         app:layout_constraintTop_toBottomOf="@+id/input_fragment_connexion_password_text">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/fragment_connexion_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword" />

@@ -52,6 +52,9 @@ class CreateSubjectForumFragment : Fragment() {
 
     private lateinit var spinnerCategories: Spinner
 
+    private lateinit var settingsFragments: FragmentsTools;
+
+
     private var columnCount = 1
 
     override fun onPause(){
@@ -87,10 +90,7 @@ class CreateSubjectForumFragment : Fragment() {
         this.buttonSubmit = view.findViewById(R.id.button_fragment_create_subject_forum_valider)
         this.spinnerCategories = view.findViewById(R.id.fragment_create_subjet_forum_spinner)
 
-        this.buttonSubmit.setOnClickListener {
-            var SubjectForumModel = SubjectForumModel();
-
-        }
+        this.settingsFragments = FragmentsTools(Singleton.mainActivity)
 
         val api = SubjectForumApi()
         api.getAllCategories { listCategories ->
@@ -98,6 +98,26 @@ class CreateSubjectForumFragment : Fragment() {
                 this.spinnerCategories.adapter = MyCategorieRecyclerViewAdapter(listCategories)
             }
         }
+
+        this.buttonSubmit.setOnClickListener {
+            var subjectForumModel = SubjectForumModel();
+
+            subjectForumModel.text = this.textInputText.text.toString()
+            subjectForumModel.title = this.textInputTitle.text.toString()
+
+            val selectedCategory = this.spinnerCategories.selectedItem as CategorieModel
+            subjectForumModel.idCategorie = selectedCategory.id
+
+            subjectForumModel.idUtilisateur = Singleton.CurrentUser!!.id
+
+            activity?.runOnUiThread {
+                api.createSubjectForum(subjectForumModel)
+                settingsFragments.loadFragment(MainPageForumFragment())
+            }
+
+        }
+
+
     }
 
     companion object {
