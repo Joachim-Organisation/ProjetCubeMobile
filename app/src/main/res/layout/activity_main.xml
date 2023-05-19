@@ -13,6 +13,7 @@
         android:orientation="vertical">
 
         <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/id_activity_main_appBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/Theme.ProjetCubeMobile.AppBarOverlay"
@@ -28,11 +29,9 @@
         </com.google.android.material.appbar.AppBarLayout>
 
 
-
-    <include
-        android:id="@+id/container"
-        layout="@layout/content_main"
-    />
+        <include
+            android:id="@+id/container"
+            layout="@layout/content_main" />
 
 
     </LinearLayout>

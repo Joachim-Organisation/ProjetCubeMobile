@@ -1,12 +1,18 @@
 package com.example.projetcubemobile
 
+import android.opengl.Visibility
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.ui.AppBarConfiguration
 import android.view.Menu
+import android.view.View
+import android.widget.FrameLayout
+import android.widget.LinearLayout
+import androidx.core.view.isVisible
 import com.example.projetcubemobile.databinding.ActivityMainBinding
 import com.example.projetcubemobile.tools.FragmentsTools
 import com.example.projetcubemobile.ui.Fragments.*
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -16,7 +22,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var bottomNav: BottomNavigationView
 
-    private lateinit var fragmentTool: FragmentsTools;
+    private lateinit var fragmentTool: FragmentsTools
+
+    private lateinit var appBarLayout: AppBarLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -28,6 +36,8 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         this.fragmentTool = FragmentsTools(this);
+
+        this.appBarLayout = this.findViewById(R.id.id_activity_main_appBar)
 
         this.fragmentTool.loadFragment(HomeFragment())
         bottomNav = this.findViewById(R.id.Nav_Menu_Down) as BottomNavigationView
@@ -78,4 +88,11 @@ class MainActivity : AppCompatActivity() {
 //                || super.onSupportNavigateUp()
 //    }
 
+    fun changAppBarVisibility() {
+        if (this.appBarLayout.visibility == View.VISIBLE) {
+            this.appBarLayout.visibility = View.GONE
+        } else {
+            this.appBarLayout.visibility = View.VISIBLE
+        }
+    }
 }

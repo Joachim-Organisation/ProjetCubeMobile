@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.Fragments.SubjectForumPage">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="648dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/id_fragment_subjet_forum_page_subjet"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:text="TextView" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="377dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/id_fragment_subject_forum_page_list_message"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </FrameLayout>
+
+        <Button
+            android:id="@+id/id_fragment_subject_forum_button_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Rafraichir" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="85dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/id_fragment_subject_forum_page_commentaire"
+                android:layout_width="match_parent"
+                android:layout_height="97dp"
+                android:hint="hint" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/id_fragment_subject_forum_page_envoyer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Envoyer" />
+
+    </LinearLayout>
+
+</FrameLayout>

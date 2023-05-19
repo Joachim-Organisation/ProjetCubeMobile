@@ -1,5 +1,6 @@
 package com.example.projetcubemobile.ui.Fragments
 
+import SubjectForumApi
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -32,40 +33,30 @@ class ForumCategorieListFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View?
-
-    {
+    ): View? {
         val view = inflater.inflate(R.layout.fragment_item_list, container, false)
 
-        //Essaie de données de test :
-        var donne1 = CategorieModel();
+        val api = SubjectForumApi()
+        activity?.runOnUiThread {
+            api.getAllCategories { categories ->
+                // La fonction onComplete sera appelée une fois que les catégories seront récupérées avec succès
 
-        donne1.id = 1;
-        donne1.nom = "test 1"
+                // Utilisez les catégories ici en les passant à la fonction de gestion appropriée
 
-        var donne2 = CategorieModel();
-
-        donne2.id = 2;
-        donne2.nom = "test 2"
-
-        val listTest = LinkedList<CategorieModel>();
-
-        listTest.add(donne1)
-        listTest.add(donne2)
-
-
-
-        // Set the adapter
-        if (view is RecyclerView) {
-            with(view) {
-                layoutManager = when {
-                    columnCount <= 1 -> LinearLayoutManager(context)
-                    else -> GridLayoutManager(context, columnCount)
+                // Set the adapter
+                if (view is RecyclerView) {
+                    with(view) {
+                        layoutManager = when {
+                            columnCount <= 1 -> LinearLayoutManager(context)
+                            else -> GridLayoutManager(context, columnCount)
+                        }
+                        adapter = MyForumCategorieListRecyclerViewAdapter(categories)
+                    }
                 }
-                adapter = MyForumCategorieListRecyclerViewAdapter(listTest)
             }
         }
         return view
+
     }
 
     companion object {

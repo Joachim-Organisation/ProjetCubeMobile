@@ -14,4 +14,6 @@ class SubjectForumModel {
 
     lateinit var categorieModel:  LinkedList<CategorieModel>
 
+    lateinit var messageForums: LinkedList<MessageForumModel>
+
 }

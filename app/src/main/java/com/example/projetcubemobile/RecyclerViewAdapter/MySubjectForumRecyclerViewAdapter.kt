@@ -4,13 +4,17 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import com.example.projetcubemobile.R
 
 import com.example.projetcubemobile.RecyclerViewAdapter.placeholder.PlaceholderContent.PlaceholderItem
+import com.example.projetcubemobile.Singleton
 import com.example.projetcubemobile.databinding.FragmentSubjectForumListLayoutOnlyItemBinding
 import com.example.projetcubemobile.models.CategorieModel
 import com.example.projetcubemobile.models.SubjectForumModel
+import com.example.projetcubemobile.tools.FragmentsTools
+import com.example.projetcubemobile.ui.Fragments.SubjectForumPage
 import java.util.LinkedList
 
 /**
@@ -45,8 +49,18 @@ class MySubjectForumRecyclerViewAdapter(
 
         private val titleTextView: TextView = binding.fragmentSubjectForumListLayoutOnlyItemTitle
 
+        private val buttonAcceder: Button = binding.fragmentSubjectForumListLayoutOnlyItemButtonAcceder
+
+        private lateinit var fragmentTools: FragmentsTools
+
         fun bind(item: SubjectForumModel) {
             titleTextView.text = item.title
+            fragmentTools = FragmentsTools(Singleton.mainActivity)
+
+            buttonAcceder.setOnClickListener {
+                Singleton.idForumSubjectLoad = item.id
+                fragmentTools.loadFragment(SubjectForumPage())
+            }
         }
 
         override fun toString(): String {

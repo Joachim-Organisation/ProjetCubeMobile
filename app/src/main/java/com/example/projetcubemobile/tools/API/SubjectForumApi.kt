@@ -21,6 +21,113 @@ import java.util.*
 
 class SubjectForumApi {
 
+
+    fun getAllSubjectForums(callback: (LinkedList<SubjectForumModel>?) -> Unit) {
+        val client = OkHttpClient()
+        val url = "http://10.0.2.2:5136/api/SubjectForums"
+        val request = Request.Builder()
+            .url(url)
+            .get()
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e(TAG, "Failed to get all subject forums", e)
+                callback(null)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                try {
+                    val json = response.body?.string()
+                    val gson = Gson()
+                    val jsonArray = JsonParser.parseString(json).asJsonArray
+
+                    val subjectForums = LinkedList<SubjectForumModel>()
+
+                    for (i in 0 until jsonArray.size()) {
+                        val jsonObject = jsonArray.get(i).asJsonObject
+
+                        val id = jsonObject.get("id").asInt
+                        val idCategorie = jsonObject.get("idCategorie").asInt
+                        val idUtilisateur = jsonObject.get("idUtilisateur").asInt
+                        val title = jsonObject.get("title").asString
+                        val text = jsonObject.get("text").asString
+
+                        val subjectForumModel = SubjectForumModel().apply {
+                            this.id = id
+                            this.idCategorie = idCategorie
+                            this.idUtilisateur = idUtilisateur
+                            this.title = title
+                            this.text = text
+                        }
+
+                        subjectForums.add(subjectForumModel)
+                    }
+                    callback(subjectForums)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to parse all subject forums response", e)
+                    callback(null)
+                }
+            }
+        })
+    }
+
+
+    fun getSubjectForumsByCategoryId(
+        categoryId: Int,
+        callback: (LinkedList<SubjectForumModel>?) -> Unit
+    ) {
+        val client = OkHttpClient()
+        val url = "http://10.0.2.2:5136/api/SubjectForums/ByCategorieId/$categoryId"
+        val request = Request.Builder()
+            .url(url)
+            .get()
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e(TAG, "Failed to get subject forums by category ID", e)
+                callback(null)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                try {
+                    val json = response.body?.string()
+                    val gson = Gson()
+                    val jsonArray = JsonParser.parseString(json).asJsonArray
+
+                    val subjectForums = LinkedList<SubjectForumModel>()
+
+                    for (i in 0 until jsonArray.size()) {
+                        val jsonObject = jsonArray.get(i).asJsonObject
+
+                        val id = jsonObject.get("id").asInt
+                        val idCategorie = jsonObject.get("idCategorie").asInt
+                        val idUtilisateur = jsonObject.get("idUtilisateur").asInt
+                        val title = jsonObject.get("title").asString
+                        val text = jsonObject.get("text").asString
+
+                        val subjectForumModel = SubjectForumModel().apply {
+                            this.id = id
+                            this.idCategorie = idCategorie
+                            this.idUtilisateur = idUtilisateur
+                            this.title = title
+                            this.text = text
+                        }
+
+                        subjectForums.add(subjectForumModel)
+                    }
+
+                    callback(subjectForums)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to parse subject forums by category ID response", e)
+                    callback(null)
+                }
+            }
+        })
+    }
+
+
     fun getAllCategories(onComplete: (LinkedList<CategorieModel>) -> Unit) {
         val url = URL("http://10.0.2.2:5136/api/Categories")
 
@@ -37,7 +144,6 @@ class SubjectForumApi {
             }
         }
     }
-
 
 
     private fun parseCategoriesJson(jsonString: String): LinkedList<CategorieModel> {
@@ -70,6 +176,7 @@ class SubjectForumApi {
 
         return categories
     }
+
     fun getSubjectForumByUserCurrent(callback: (LinkedList<SubjectForumModel>?) -> Unit) {
         val client = OkHttpClient()
         val url = "http://10.0.2.2:5136/api/SubjectForums/ByUserId/${Singleton.CurrentUser!!.id}"
@@ -120,8 +227,6 @@ class SubjectForumApi {
     }
 
 
-
-
     fun createSubjectForum(subjectForum: SubjectForumModel) {
         val url = URL("http://10.0.2.2:5136/api/SubjectForums")
 
@@ -151,6 +256,48 @@ class SubjectForumApi {
                 println("Response JSON : $response")
             }
         }
+    }
+
+    fun getSubjectForumById(id: Int, callback: (SubjectForumModel?) -> Unit) {
+        val client = OkHttpClient()
+        val url = "http://10.0.2.2:5136/api/SubjectForums/$id"
+        val request = Request.Builder()
+            .url(url)
+            .get()
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e(TAG, "Failed to get subject forum by id", e)
+                callback(null)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                try {
+                    val json = response.body?.string()
+                    val gson = Gson()
+                    val jsonObject = JsonParser.parseString(json).asJsonObject
+
+                    val id = jsonObject.get("id").asInt
+                    val idCategorie = jsonObject.get("idCategorie").asInt
+                    val idUtilisateur = jsonObject.get("idUtilisateur").asInt
+                    val title = jsonObject.get("title").asString
+                    val text = jsonObject.get("text").asString
+
+                    val subjectForumModel = SubjectForumModel()
+                    subjectForumModel.id = id
+                    subjectForumModel.idCategorie = idCategorie
+                    subjectForumModel.idUtilisateur = idUtilisateur
+                    subjectForumModel.title = title
+                    subjectForumModel.text = text
+
+                    callback(subjectForumModel)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to parse subject forum by id response", e)
+                    callback(null)
+                }
+            }
+        })
     }
 
 }
