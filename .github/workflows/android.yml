@@ -1,32 +1,19 @@
-name: Android CI
-
-env:
-  # Le nom du module principal du projet
-  main_project_module: app
-
-  # Le nom du Play Store
-  playstore_name: Frogobox ID
+name: build
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
   pull_request:
-    branches: [ master ]
-    types: [opened, synchronize, reopened]
-  workflow_dispatch:
 
 jobs:
   build:
-    name: Build and analyze
+    name: Build
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v1
-
-      - name: Set current date as env variable
-        run: echo "date_today=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
-
-      - name: Set repository name as env variable
-        run: echo "repository_name=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: Set Up JDK
         uses: actions/setup-java@v3
@@ -44,7 +31,7 @@ jobs:
       - name: Build gradle project
         run: ./gradlew build
 
-      - name: Build apk release project (APK) - ${{ env.main_project_module }} module
+      - name: Build APK release project (APK) - ${{ env.main_project_module }} module
         run: ./gradlew assemble
 
       - name: Create Release
@@ -70,33 +57,16 @@ jobs:
           asset_name: ${{ env.date_today }} - ${{ env.playstore_name }} - ${{ env.repository_name }} - APK(s) release generated
           asset_content_type: application/vnd.android.package-archive
 
-  sonarcloud:
-    name: SonarCloud Analysis
-    needs: build  # Spécifie que ce job a besoin que le job "build" soit terminé avant de commencer
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
+      - name: Run Trivy vulnerability scanner in repo mode
+        uses: aquasecurity/trivy-action@master
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
+          scan-type: 'fs'
+          ignore-unfixed: true
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
         with:
-          java-version: 11
-          distribution: 'zulu' # Alternative distribution options are available
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-      - name: Cache Gradle packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: ${{ runner.os }}-gradle
-      - name: Build and analyze
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew build sonarqube --info
+          sarif_file: 'trivy-results.sarif'
