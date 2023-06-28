@@ -1,13 +1,76 @@
 name: Android CI
 
+env:
+  main_project_module: app
+  playstore_name: Frogobox ID
+
 on:
   push:
-    branches:
-      - master
+    branches: [main]
   pull_request:
+    branches: [main]
+  workflow_dispatch:
+
 jobs:
   build:
-    name: Build
+    name: Build and release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Set current date as env variable
+        run: echo "date_today=$(date +'%Y-%m-%d-%H-%M-%S')" >> $GITHUB_ENV
+
+      - name: Set repository name as env variable
+        run: echo "repository_name=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
+
+      - name: Set Up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Change wrapper permissions
+        run: chmod +x ./gradlew
+
+      - name: Run gradle tests
+        run: ./gradlew test
+
+      - name: Build gradle project
+        run: ./gradlew build
+
+      - name: Build apk release project (APK) - ${{ env.main_project_module }} module
+        run: ./gradlew assemble
+        
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.date_today }}  # Utilisez la date comme balise
+          release_name: Release ${{ github.ref }}
+          body: Release ${{ github.ref }} - ${{ env.playstore_name }} - ${{ env.date_today }} - ${{ env.repository_name }}
+          draft: false
+          prerelease: false
+
+      - name: Get APK Path
+        id: get_apk_path
+        run: echo "::set-output name=apk_path::$(find ${{ github.workspace }}/${{ env.main_project_module }}/build/outputs/apk/release -name '*.apk' -print -quit)"
+
+      - name: Upload APK Release to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.get_apk_path.outputs.apk_path }}
+          asset_name: ${{ env.date_today }} - ${{ env.playstore_name }} - ${{ env.repository_name }} - APK(s) release generated
+          asset_content_type: application/vnd.android.package-archive
+
+  test:
+    name: Test
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
@@ -20,9 +83,36 @@ jobs:
           ignore-unfixed: true
           format: 'sarif'
           output: 'trivy-results.sarif'
-          severity: 'CRITICAL,HIGHT'
+          severity: 'CRITICAL,HIGH,MEDIUM'
 
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
+      - name: Convert SARIF to TXT
+        run: cat trivy-results.sarif | jq -r '.runs[].results[].message' > trivy-results.txt
+
+      - name: Create Trivy scan artifact
+        uses: actions/upload-artifact@v2
         with:
-          sarif_file: 'trivy-results.sarif'
+          name: trivy-results
+          path: 'trivy-results.txt'
+          
+  Notification:
+    name: Notification
+    runs-on: ubuntu-20.04
+    needs: [build, test]
+    steps: 
+      - name: Install swaks
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y swaks
+          
+      - name: Send success notification
+        if: ${{ success() }}
+        run: |
+          echo "Subject: Workflow Success" > email.txt
+          echo "To: corentin.talour@bts-malraux.net" >> email.txt
+          echo "From: corentin.talour@bts-malraux.net" >> email.txt
+          echo "" >> email.txt
+          echo "The workflow was successful." >> email.txt
+          swaks --server smtp.gmail.com:587 --tls --auth \
+            --auth-user corentin.talour@bts-malraux.net --auth-password ${{ secrets.GMAIL_APP_PASSWORD }} \
+            --to corentin.talour@bts-malraux.net --from your-email@gmail.com \
+            --data email.txt
