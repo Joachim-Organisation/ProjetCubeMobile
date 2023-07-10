@@ -4,10 +4,12 @@ import SubjectForumApi
 import android.app.Activity
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -66,18 +68,18 @@ class SubjectForumPage : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
 
-            KeyboardListener(view, object : KeyboardListener.KeyboardVisibilityListener {
-                override fun onKeyboardVisibleChanged(isVisible: Boolean) {
-                    // Faites quelque chose lorsque le clavier est ouvert ou fermé
-                    if (isVisible) {
-                        // Le clavier est ouvert
-                        Singleton.mainActivity.changAppBarVisibility()
-                    } else {
-                        // Le clavier est fermé
-                        Singleton.mainActivity.changAppBarVisibility()
-                    }
+        KeyboardListener(view, object : KeyboardListener.KeyboardVisibilityListener {
+            override fun onKeyboardVisibleChanged(isVisible: Boolean) {
+                // Faites quelque chose lorsque le clavier est ouvert ou fermé
+                if (isVisible) {
+                    // Le clavier est ouvert
+                    Singleton.mainActivity.changAppBarVisibility()
+                } else {
+                    // Le clavier est fermé
+                    Singleton.mainActivity.changAppBarVisibility()
                 }
-            })
+            }
+        })
 
         // Inflate the layout for this fragment
         val api = SubjectForumApi()
@@ -91,6 +93,16 @@ class SubjectForumPage : Fragment() {
         this.buttonRefresh = view!!.findViewById(R.id.id_fragment_subject_forum_button_refresh)
         this.fragmentTool = FragmentsTools(Singleton.mainActivity)
         this.listMessage = view!!.findViewById(R.id.id_fragment_subject_forum_page_list_message)
+
+        this.commentaire.setOnEditorActionListener { v, actionId, event ->
+            if(actionId == EditorInfo.IME_ACTION_DONE){
+                Singleton.mainActivity.onInvisibleVisibleNavMenu()
+                true
+            } else {
+                Singleton.mainActivity.onVisibleNavMenu()
+                false
+            }
+        }
 
         // Forum
         val idSubjectForum =
@@ -116,7 +128,9 @@ class SubjectForumPage : Fragment() {
                     // faire quelque chose avec le sujet récupéré
                     subject = subjectForum
 
-                    ennonceDemande.text = subject.text;
+                    ennonceDemande.text = subject.text
+
+
 
                     this.buttonEnvoyer.setOnClickListener {
                         var messageEnvoyer = MessageForumModel()

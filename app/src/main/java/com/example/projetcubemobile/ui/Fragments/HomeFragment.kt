@@ -2,6 +2,7 @@ package com.example.projetcubemobile.ui.Fragments
 
 import UtilisateurApi
 import android.content.Context
+import android.opengl.Visibility
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -17,6 +18,7 @@ import com.example.projetcubemobile.R
 import com.example.projetcubemobile.Singleton
 import com.example.projetcubemobile.models.UtilisateurModel
 import com.example.projetcubemobile.tools.FragmentsTools
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.textfield.TextInputEditText
 
 /**
@@ -87,8 +89,6 @@ class HomeFragment : Fragment() {
 
                     } else {
                         // Afficher un message d'erreur si l'utilisateur n'a pas été trouvé
-
-
                         this.showPopup(view);
                     }
                 }
@@ -146,6 +146,7 @@ class HomeFragment : Fragment() {
             val popupWindow = PopupWindow(view.context)
             popupWindow.dismiss()
     }
+
 
 
     companion object {

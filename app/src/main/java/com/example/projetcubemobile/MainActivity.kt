@@ -25,6 +25,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fragmentTool: FragmentsTools
 
     private lateinit var appBarLayout: AppBarLayout
+
+    private lateinit var navMenuBas: BottomNavigationView;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -38,6 +40,8 @@ class MainActivity : AppCompatActivity() {
         this.fragmentTool = FragmentsTools(this);
 
         this.appBarLayout = this.findViewById(R.id.id_activity_main_appBar)
+
+        this.navMenuBas = findViewById(R.id.Nav_Menu_Down)
 
         this.fragmentTool.loadFragment(HomeFragment())
         bottomNav = this.findViewById(R.id.Nav_Menu_Down) as BottomNavigationView
@@ -87,6 +91,15 @@ class MainActivity : AppCompatActivity() {
 //        return navController.navigateUp(appBarConfiguration)
 //                || super.onSupportNavigateUp()
 //    }
+
+    fun onInvisibleVisibleNavMenu() {
+        this.navMenuBas.visibility = View.INVISIBLE
+    }
+
+    fun onVisibleNavMenu() {
+        this.navMenuBas.visibility = View.VISIBLE
+    }
+
 
     fun changAppBarVisibility() {
         if (this.appBarLayout.visibility == View.VISIBLE) {

@@ -43,14 +43,14 @@
                 android:id="@+id/id_fragment_subject_forum_page_commentaire"
                 android:layout_width="match_parent"
                 android:layout_height="97dp"
-                android:hint="hint" />
+                android:hint="Votre message" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/id_fragment_subject_forum_page_envoyer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="67dp"
             android:layout_weight="1"
             android:text="Envoyer" />
 
